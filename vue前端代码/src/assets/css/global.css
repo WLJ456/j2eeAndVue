@@ -1,0 +1,20 @@
+/* 全局css */
+body,html,#app{
+background: url('../bgc.jpg') no-repeat center;
+background-attachment: fixed;
+background-size: cover;
+height: 100%;
+width: 100%;
+margin: 0;
+padding: 0;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+input[type="number"]{
+    -moz-appearance: textfield;
+}
+body::-webkit-scrollbar {
+    display: none;
+  }

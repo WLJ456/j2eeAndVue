@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-1ecf651a"],{"74e3":function(n,e,t){"use strict";var c=t("e9c2"),a=t.n(c);a.a},"7d89":function(n,e,t){"use strict";t.r(e);var c=function(){var n=this,e=n.$createElement,t=n._self._c||e;return t("div",{attrs:{id:"notfound"}},[n._v("404!未找到该页面!")])},a=[],u={name:"page404",data:function(){return{}},methods:{}},o=u,r=(t("74e3"),t("4023")),i=Object(r["a"])(o,c,a,!1,null,"6e23527d",null);e["default"]=i.exports},e9c2:function(n,e,t){}}]);
+//# sourceMappingURL=chunk-1ecf651a.b0043624.js.map

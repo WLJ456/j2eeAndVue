@@ -13,6 +13,7 @@ const routes = [
   {
     path: '/users/homePage', name: 'homePage',
     component: () => import('../components/users/homePage.vue'),
+    //配置元数据
     meta: {
       requireAuth: true
     },
@@ -55,15 +56,24 @@ const routes = [
   },
   {
     path: '/users/comment', name: 'comment',
-    component: () => import('../components/users/comment.vue')
+    component: () => import('../components/users/comment.vue'),
+    meta: {
+      requireAuth: true
+    },
   },
   {
     path: '/admin/seeAllBlog', name: 'seeAllBlog',
-    component: () => import('../components/admin/seeAllBlog.vue')
+    component: () => import('../components/admin/seeAllBlog.vue'),
+    meta: {
+      requireAuth: true
+    },
   },
   {
     path: '/admin/seeAllUser', name: 'seeAllUser',
-    component: () => import('../components/admin/seeAllUser.vue')
+    component: () => import('../components/admin/seeAllUser.vue'),
+    meta: {
+      requireAuth: true
+    },
   },
 
 ]
@@ -71,14 +81,25 @@ const router = new VueRouter({
   mode: 'history',
   routes
 })
-//前端拦截器,即所有需要用户登录
+// 解决Loading chunk (\d)+ failed问题
+router.onError((error) => {
+  const pattern = /Loading chunk (\d)+ failed/g;
+  const isChunkLoadFailed = error.message.match(pattern);
+  if (isChunkLoadFailed) {
+    window.location.reload();
+    // router.replace(router.history.pending.fullPath);
+  } else {
+    console.log(error)
+  }
+});
+//前端拦截器,即所有操作需要用户登录
 router.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {
     next('/NotFound/404') // 判断此跳转路由的来源路由是否存在，存在的情况跳转到来源路由，否则跳转到404页面
   }
-  if (to.meta.requireAuth) {
+  if (to.meta.requireAuth) {// 判断该路由是否需要登录权限
     if (sessionStorage.getItem('roleInfo')) {
-      console.log("用户以登录")
+      console.log("用户已登录")
       next()
     } else {
       alert("请先登录哟！")

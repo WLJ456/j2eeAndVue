@@ -68,7 +68,7 @@ export default {
       params: {
         username: this.name
       },
-      timeout: 3000
+      timeout: 10000
     }).then(res => {
       console.log(res.data);
       if (res.data != null) {

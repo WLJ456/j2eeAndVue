@@ -92,7 +92,7 @@ export default {
       //将路径存入form表单
       //自行拼接以解决乱码问题
       this.msg=response + file.name;
-      this.form.imagesUrl = 'http://localhost:8080/' + response + file.name;
+      this.form.imagesUrl = 'http://49.233.69.229:8080/' + response + file.name;
     },
     //上传发表
     toSubmit() {
@@ -120,7 +120,6 @@ export default {
           blogText: this.form.blogText,
           imagesUrl: this.form.imagesUrl
         },
-        timeout: 3000
       }).then(res => {
         if (res.data == true) {
           this.$message({
@@ -145,7 +144,6 @@ export default {
           params: {
             imgUrl: this.msg
           },
-          timeout: 3000
         }).then(res => {
           console.log(res.data);
         });

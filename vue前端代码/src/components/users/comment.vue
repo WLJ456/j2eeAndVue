@@ -70,7 +70,7 @@ export default {
       params: {
         id: this.id
       },
-      timeout: 3000
+      timeout: 10000
     }).then(res => {
       if (res.data != null) {
         this.blogitem = res.data;
@@ -85,7 +85,7 @@ export default {
       params: {
         id: this.id
       },
-      timeout: 3000
+      timeout: 10000
     }).then(res => {
       if (res.data != null) {
         this.$store.state.comments = res.data;
@@ -110,7 +110,7 @@ export default {
             name: this.CommentForm.name,
             context: this.CommentForm.input
           },
-          timeout: 3000
+          timeout: 10000
         }).then(res => {
           if (res.data !== null) {
             console.log(res.data);
@@ -132,12 +132,19 @@ export default {
 </script>
 
 <style scoped  lang="less">
+#commentShow::-webkit-scrollbar {
+  display: none; //谷歌浏览器
+}
 #commentShow {
+    -ms-overflow-style: none; //火狐浏览器
+  scrollbar-width: none; //ie浏览器
   width: 1000px;
+  height: 90vh;
   position: absolute;
   top: 125px;
   left: 400px;
   z-index: 1;
+  overflow: auto;
   .box-card {
     width: 900px;
     border-radius: 15px;

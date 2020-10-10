@@ -82,7 +82,7 @@ export default {
         if (!valid) {
           console.log(valid);
         } else {
-          //登录请求
+          //登录请求 //后台ssm自动处理前台的get或者post请求
           request({
             url: '/user/login',
             method: 'post',
@@ -113,7 +113,7 @@ export default {
                     });
                   } else {
                     this.$router.push({
-                      name: 'homePage',
+                      name: 'showArticle',
                       query: { name: res.data.name }
                     });
                   }
@@ -134,7 +134,6 @@ export default {
 .login_container {
   height: 100%;
   width: 100%;
-  background-color: #bbe6d6;
   .el-alert {
     width: 29%;
     left: 50%;

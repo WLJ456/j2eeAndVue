@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import App from './App.vue'
 import './assets/css/global.css'
+
 // import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 // Vue.use(ElementUI)
 import {
   Button, Switch, Form, FormItem, Menu, Submenu, MenuItem, MenuItemGroup, Row, Col,
   Input, Icon, Alert, Container, Header, Main, Aside, Footer, Tooltip, Calendar, Card,
-  Option,Radio,Select,RadioGroup,Checkbox,CheckboxGroup,Upload,Dialog,Message,Table,TableColumn
+  Option, Radio, Select, RadioGroup, Checkbox, CheckboxGroup, Upload, Dialog, Message, Table, TableColumn
 } from 'element-ui'
-
+import 'element-ui/lib/theme-chalk/base.css';
+import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
+Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.use(TableColumn)
 Vue.use(Table)
 Vue.component(Message.name, Message)
@@ -46,6 +49,9 @@ Vue.use(MenuItemGroup);
 Vue.config.productionTip = false
 import router from './router'
 import store from './store'
+// 图形验证工具
+import SlideVerify from 'vue-monoplasty-slide-verify';
+Vue.use(SlideVerify);
 new Vue({
   router,
   store,

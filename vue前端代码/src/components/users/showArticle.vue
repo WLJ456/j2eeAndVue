@@ -3,27 +3,29 @@
     <homePage />
     <div id="showArticle">
       <!-- 查看自己博文数据 -->
-      <el-card class="box-card" v-for="(item, index) in blogbyName" :key="index">
-        <img :src="item.imagesUrl" width="100px" height="100px" alt />
-        <div class="context">
-          <h4>{{item.blogTitle}}</h4>
-          <p>{{item.blogText}}</p>
-          <span
-            style="fontSize:12px; 
+      <transition-group name="el-zoom-in-top">
+        <el-card class="box-card" v-for="(item) in blogbyName" :key="item.id">
+          <img :src="item.imagesUrl" width="100px" height="100px" alt />
+          <div class="context">
+            <h4>{{item.blogTitle}}</h4>
+            <p>{{item.blogText}}</p>
+            <span
+              style="fontSize:12px; 
             position:absolute;bottom: 10px;right: 10px;"
-          >发表时间：{{item.createdDate}}</span>
-        </div>
-        <div class="operate">
-          <el-button type="primary" icon="el-icon-view" @click="toComment(item.id)">查看</el-button>
-          <el-button
-            type="danger"
-            style=" backgroundColor:#F56C6C;color:#fff"
-            :plain="true"
-            icon="el-icon-delete"
-            @click="delBlog(item.id)"
-          >删除</el-button>
-        </div>
-      </el-card>
+            >发表时间：{{item.createdDate}}</span>
+          </div>
+          <div class="operate">
+            <el-button type="primary" icon="el-icon-view" @click="toComment(item.id)">查看</el-button>
+            <el-button
+              type="danger"
+              style=" backgroundColor:#F56C6C;color:#fff"
+              :plain="true"
+              icon="el-icon-delete"
+              @click="delBlog(item.id)"
+            >删除</el-button>
+          </div>
+        </el-card>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -49,8 +51,7 @@ export default {
       method: 'post',
       params: {
         name: this.name
-      },
-      timeout: 3000
+      }
     }).then(res => {
       if (res.data != null) {
         this.$store.state.blogbyName = res.data;
@@ -63,13 +64,13 @@ export default {
   },
   methods: {
     delBlog(id) {
+      console.log(id);
       request({
         url: '/blog/delBlog',
-        method: 'post',
+        method: 'get',
         params: {
           id: id
-        },
-        timeout: 3000
+        }
       }).then(res => {
         if (res.data == true) {
           this.$message({
@@ -77,7 +78,6 @@ export default {
             type: 'success'
           });
           this.$store.commit('delBlogById', id);
-    
         } else {
           this.$message.error('删除失败');
         }
@@ -92,12 +92,19 @@ export default {
 </script>
 
 <style scoped lang="less">
+#showArticle::-webkit-scrollbar {
+  display: none; //谷歌浏览器
+}
 #showArticle {
+  -ms-overflow-style: none; //火狐浏览器
+  scrollbar-width: none; //ie浏览器
   width: 1000px;
+  height: 80vh;
+  overflow: auto;
   position: absolute;
   top: 125px;
   left: 400px;
-  z-index: 1;
+  z-index: 2;
   .box-card {
     width: 900px;
     height: 200px;

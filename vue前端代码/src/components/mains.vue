@@ -18,33 +18,37 @@
       </el-header>
 
       <el-container>
-        <el-aside width="500px">
+        <el-aside width="30%">
           <el-calendar v-model="value"></el-calendar>
         </el-aside>
         <!-- 所有用户发表的博文 -->
         <el-main>
-          <el-card class="box-card" v-for="(item, index) in allBlogs" :key="index">
-            <img :src="item.imagesUrl" width="100px" height="100px" alt />
-            <div class="context">
-              <h4>{{item.blogTitle}}</h4>
-              <p>{{item.blogText}}</p>
-              <span style="fontSize:12px; 
-            position:absolute;bottom: 10px;right: 10px;">
-                作者用户名：{{item.name}}
-                <br />
-                发表时间:{{item.createdDate}}
-              </span>
-            </div>
-            <div class="operate">
-              <el-button
-                type="primary"
-                icon="el-icon-edit"
-                style=" backgroundColor:#409EFF;color:#fff"
-                :plain="true"
-                @click="toComment(item.id)"
-              >评论</el-button>
-            </div>
-          </el-card>
+          <transition-group name="el-zoom-in-top">
+            <el-card class="box-card" v-for="(item) in allBlogs" :key="item.id">
+              <img :src="item.imagesUrl" width="100px" height="100px" alt />
+              <div class="context">
+                <h4>{{item.blogTitle}}</h4>
+                <p>{{item.blogText}}</p>
+                <span
+                  style="fontSize:12px; 
+            position:absolute;bottom: 10px;right: 10px;"
+                >
+                  作者用户名：{{item.name}}
+                  <br />
+                  发表时间:{{item.createdDate}}
+                </span>
+              </div>
+              <div class="operate">
+                <el-button
+                  type="primary"
+                  icon="el-icon-edit"
+                  style=" backgroundColor:#409EFF;color:#fff"
+                  :plain="true"
+                  @click="toComment(item.id)"
+                >评论</el-button>
+              </div>
+            </el-card>
+          </transition-group>
         </el-main>
       </el-container>
     </el-container>
@@ -74,15 +78,12 @@ export default {
       this.username = this.$store.state.roleInfo.name;
       this.flag = false;
     }
-  },
-  mounted() {
     request({
       url: '/blog/findAll',
       method: 'post',
-      params: {},
-      timeout: 3000
+      params: {}
     }).then(res => {
-      if (res.data != null) {
+      if (res.data) {
         this.$store.state.allBlogs = res.data;
         //将数据覆盖原先数据
         this.allBlogs = this.$store.state.allBlogs;
@@ -91,6 +92,7 @@ export default {
       }
     });
   },
+
   methods: {
     //用户登录时执行的返回主页面方法!
     toBackper() {
@@ -119,7 +121,7 @@ export default {
 .el-container {
   padding: 0;
   margin: 0;
-  height: 100vh; //自适应布局
+  height: 90vh; //自适应布局
 }
 .el-header > .logo {
   font-family: cursive;
@@ -134,6 +136,7 @@ export default {
   color: rgb(255, 255, 255);
   text-align: center;
   line-height: 90px;
+  position: relative;
   #rightUser {
     font-size: 16px;
     margin-right: 26px;
@@ -141,8 +144,11 @@ export default {
   }
   //按钮
   .el-row {
-    float: right;
+    // float: right;
+    position: absolute;
+    right: 0;
     font-size: 10px;
+    // white-space: nowrap;
     .el-button {
       margin-right: 18px;
     }
@@ -166,10 +172,19 @@ body > .el-container {
     border-radius: 15px;
   }
 }
+//小于600隐藏日历
+@media screen and (max-width: 600px) {
+  .el-aside {
+    display: none;
+  }
+}
+
 .el-main::-webkit-scrollbar {
   display: none;
 }
 .el-main {
+  -ms-overflow-style: none; //火狐浏览器
+  scrollbar-width: none; //ie浏览器
   background-color: rgba(255, 255, 255, 0);
   color: #333;
   text-align: center;

@@ -1,91 +1,98 @@
 <template>
   <div class="reg_container">
-    <div class="reg_box">
-      <!-- 顶部返回按钮 -->
-      <div class="backLogin" @click="backLogin">
-        <i class="el-icon-arrow-left"></i> 返回
+      <div class="reg_box">
+        <!-- 顶部返回按钮 -->
+        <div class="backLogin" @click="backLogin">
+          <i class="el-icon-arrow-left"></i> 返回
+        </div>
+        <!-- 顶部图标 -->
+        <div class="icon_box">
+          <img src="../assets/logo.png" alt />
+        </div>
+        <!-- 注册区域 -->
+        <el-form
+          label-width="0px"
+          :rules="regRlues"
+          :model="form"
+          class="reg_form"
+          ref="regRef"
+          @keyup.enter.native="register"
+        >
+          <el-form-item prop="user">
+            <el-input
+              class="reg_user"
+              prefix-icon="el-icon-user"
+              v-model="form.user"
+              maxlength="13"
+              placeholder="用户名"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="pwd">
+            <el-input
+              type="password"
+              class="pwd"
+              prefix-icon="el-icon-lock"
+              maxlength="16"
+              v-model="form.pwd"
+              placeholder="输入密码"
+              :show-password="flag"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="ckpwd">
+            <el-input
+              type="password"
+              class="check_pwd"
+              prefix-icon="el-icon-lock"
+              maxlength="16"
+              v-model="form.ckpwd"
+              placeholder="再次输入密码"
+              :show-password="flag"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="tel">
+            <el-input
+              type="number"
+              prefix-icon="el-icon-phone"
+              class="tel"
+              maxlength="11"
+              v-model="form.tel"
+              placeholder="手机号"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="code">
+            <el-input
+              type="number"
+              prefix-icon="el-icon-success"
+              class="code"
+              v-model="form.code"
+              placeholder="验证码"
+            ></el-input>
+            <el-button type="info" class="get_code" @click="verifyFlag = true">立即获取</el-button>
+          </el-form-item>
+          <el-form-item class="btns">
+            <el-button
+              type="primary"
+              style="backgroundColor: #409eff;color:#fff"
+              :plain="true"
+              @click="register"
+            >注册</el-button>
+            <el-button type="danger" @click="resetForm">重置</el-button>
+          </el-form-item>
+        </el-form>
       </div>
-      <!-- 顶部图标 -->
-      <div class="icon_box">
-        <img src="../assets/logo.png" alt />
+    <!-- 滑块验证 -->
+    <el-collapse-transition>
+      <div class="Verify" v-show="verifyFlag">
+        <slideVerify @toslide="cheackverify" />
       </div>
-      <!-- 注册区域 -->
-      <el-form
-        label-width="0px"
-        :rules="regRlues"
-        :model="form"
-        class="reg_form"
-        ref="regRef"
-        @keyup.enter.native="register"
-      >
-        <el-form-item prop="user">
-          <el-input
-            class="reg_user"
-            prefix-icon="el-icon-user"
-            v-model="form.user"
-            maxlength="13"
-            placeholder="用户名"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="pwd">
-          <el-input
-            type="password"
-            class="pwd"
-            prefix-icon="el-icon-lock"
-            maxlength="16"
-            v-model="form.pwd"
-            placeholder="输入密码"
-            :show-password="flag"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="ckpwd">
-          <el-input
-            type="password"
-            class="check_pwd"
-            prefix-icon="el-icon-lock"
-            maxlength="16"
-            v-model="form.ckpwd"
-            placeholder="再次输入密码"
-            :show-password="flag"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="tel">
-          <el-input
-            type="number"
-            prefix-icon="el-icon-phone"
-            class="tel"
-            maxlength="11"
-            v-model="form.tel"
-            placeholder="手机号"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="code">
-          <el-input
-            type="number"
-            prefix-icon="el-icon-success"
-            class="code"
-            v-model="form.code"
-            placeholder="验证码"
-          ></el-input>
-          <el-button type="info" class="get_code" @click="getCode">立即获取</el-button>
-        </el-form-item>
-        <el-form-item class="btns">
-          <el-button
-            type="primary"
-            style="backgroundColor: #409eff;color:#fff"
-            :plain="true"
-            @click="register"
-          >注册</el-button>
-          <el-button type="danger" @click="resetForm">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    </el-collapse-transition>
   </div>
 </template>
 
 <script>
 import { request } from '../api/request.js';
 import axios from 'axios';
+import slideVerify from './unit/slideVerify';
 export default {
   data() {
     //验证不能输入中文
@@ -120,6 +127,8 @@ export default {
       }
     };
     return {
+      //滑块验证码控制
+      verifyFlag: false,
       flag: true,
       form: {
         user: '',
@@ -180,7 +189,7 @@ export default {
               password: this.form.pwd,
               phonenumber: this.form.tel
             },
-            timeout: 3000
+            timeout: 10000
           }).then(
             res => {
               if (res.data == true) {
@@ -199,16 +208,30 @@ export default {
               console.log('这是err方法！');
             }
           );
-        }else{
-           this.$message.error('验证码错误！(调用的第三方接口)');
+        } else {
+          this.$message.error('验证码错误！(调用的第三方接口)');
         }
       });
     },
     backLogin() {
       this.$router.push('login');
     },
+    //核对滑块验证是否成功
+    cheackverify(flag) {
+      if (flag == true && this.form.tel != null && this.form.tel != '') {
+        this.verifyFlag = !this.verifyFlag;
+        //验证成功后，获取验证码
+        this.getCode();
+      } else {
+        this.verifyFlag = !this.verifyFlag;
+        this.register();
+      }
+    },
+    //获取验证码
     getCode() {
-      console.log('获取验证码');
+      this.$message.error(
+        '(100条免费的接口用完了!!)短信费有点贵,直接告诉你吧，测试验证码为：8520'
+      );
       axios({
         url: '/code/efficient/voice',
         method: 'get',
@@ -218,12 +241,13 @@ export default {
           valicode: 8520,
           playtimes: 2
         },
-        timeout: 3000
+        timeout: 2000
       }).then(res => {
         console.log(res);
       });
     }
-  }
+  },
+  components: { slideVerify }
 };
 </script>
 
@@ -231,7 +255,6 @@ export default {
 .reg_container {
   height: 100%;
   width: 100%;
-  background-color: #bbe6d6;
   .reg_box {
     width: 450px;
     height: 600px;
@@ -288,6 +311,13 @@ export default {
     .get_code {
       float: right;
     }
+  }
+  .Verify {
+    background-color: #fff;
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>

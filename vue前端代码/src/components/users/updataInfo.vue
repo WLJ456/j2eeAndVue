@@ -82,7 +82,7 @@ export default {
               emailaddress: this.form.emailaddress,
               userdesc: this.form.userdesc
             },
-            timeout: 3000
+            timeout: 10000
           }).then(
             res => {
               console.log('这是请求的数据');
